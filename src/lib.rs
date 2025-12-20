@@ -1,3 +1,57 @@
+//! A lightweight, `no_std`, pure Rust mathematical kernel for the **exact** evaluation of
+//! two-center Coulomb integrals over $ns$ Slater-Type Orbitals (STOs).
+//!
+//! # STO-ns: Slater-Type Orbitals (s-orbitals)
+//!
+//! This library implements the analytical expansion method using
+//! ellipsoidal coordinates, specifically optimized for spherically symmetric (`l=0`) orbitals.
+//! It serves as a high-performance primitive for semi-empirical methods (like QEq, EEM, ReaxFF)
+//! and ab initio calculations involving s-orbitals.
+//!
+//! ## Usage
+//!
+//! ### 1. Structural API (Recommended)
+//!
+//! Abstracting parameters into orbital objects for clear, semantic interactions.
+//!
+//! ```
+//! use sto_ns::NsOrbital;
+//!
+//! // Define orbital A: n=2, zeta=1.5
+//! let orb_a = NsOrbital::new(2, 1.5).expect("Invalid parameters");
+//!
+//! // Define orbital B: n=1, zeta=1.0
+//! let orb_b = NsOrbital::new(1, 1.0).expect("Invalid parameters");
+//!
+//! // Calculate the Coulomb integral J(A,B) at distance R=2.0
+//! let integral = orb_a.repulsion(&orb_b, 2.0);
+//!
+//! assert!(integral > 0.0);
+//! ```
+//!
+//! ### 2. Direct Functional API
+//!
+//! Low-level access to the mathematical kernel. Ideal for tight loops or mathematical
+//! backends where struct overhead is unnecessary.
+//!
+//! ```
+//! use sto_ns::sto_coulomb_integral;
+//!
+//! let r = 2.0;
+//! // Calculate J(2s, 1s) with exponents 1.5 and 1.0
+//! let result = sto_coulomb_integral(r, 2, 1.5, 1, 1.0);
+//! ```
+//!
+//! ## Features
+//!
+//! - **Exact Arithmetic**: Uses analytical formulas, not approximations.
+//! - **Numerical Stability**: Automatically handles singularities at short ranges.
+//! - **High Performance**:
+//!   - Zero heap allocation (stack-only).
+//!   - Compile-time computed factorial tables.
+//!   - **`O(N)`** recursive algorithms for auxiliary functions with minimal overhead.
+//! - **Portable**: `no_std` compatible (via `libm`), runs on servers, WASM, and microcontrollers.
+
 #![cfg_attr(not(feature = "std"), no_std)]
 
 mod math {
@@ -80,13 +134,17 @@ fn fast_binomial(n: usize, k: usize) -> f64 {
     fast_fact(n) / (fast_fact(k) * fast_fact(n - k))
 }
 
+/// Represents a spherically symmetric **`ns`** Slater-Type Orbital (STO).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct NsOrbital {
+    /// Principal quantum number `n` (must be > 0).
     pub n: u8,
+    /// Orbital exponent `ζ` (must be > 0).
     pub zeta: f64,
 }
 
 impl NsOrbital {
+    /// Creates a new STO. Returns `None` if parameters are unphysical (`n=0` or `ζ ≤ 0`).
     pub fn new(n: u8, zeta: f64) -> Option<Self> {
         if n > 0 && zeta > 0.0 {
             Some(Self { n, zeta })
@@ -95,12 +153,31 @@ impl NsOrbital {
         }
     }
 
+    /// Computes the exact Coulomb repulsion energy with another orbital.
+    ///
+    /// # Arguments
+    ///
+    /// * `other` - The other orbital.
+    /// * `r_bohr` - The internuclear distance in Bohr.
+    ///
+    /// # Returns
+    ///
+    /// * Energy in Hartree.
     #[inline]
     pub fn repulsion(&self, other: &NsOrbital, r_bohr: f64) -> f64 {
         sto_coulomb_integral(r_bohr, self.n, self.zeta, other.n, other.zeta)
     }
 }
 
+/// Computes the exact two-center Coulomb integral **`J_AB`** (**Hartree**).
+///
+/// This is the low-level kernel. If you have [`NsOrbital`] structs, use [`NsOrbital::repulsion`] instead.
+///
+/// # Arguments
+///
+/// * `r` - Internuclear distance in Bohr.
+/// * `n_a`, `zeta_a` - Parameters for orbital on center A.
+/// * `n_b`, `zeta_b` - Parameters for orbital on center B.
 pub fn sto_coulomb_integral(r: f64, n_a: u8, zeta_a: f64, n_b: u8, zeta_b: f64) -> f64 {
     if r < SINGULARITY_THRESHOLD {
         return calc_one_center_limit(n_a, zeta_a, n_b, zeta_b);
