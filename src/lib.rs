@@ -260,3 +260,42 @@ fn calc_norm_sq_fast(n: u8, zeta: f64) -> f64 {
     let two_zeta = 2.0 * zeta;
     powi(two_zeta, (m + 1) as i32) / (fast_fact(m) * 4.0 * PI)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use approx::assert_relative_eq;
+
+    #[test]
+    fn test_long_range_limit() {
+        let j = sto_coulomb_integral(100.0, 1, 1.0, 1, 1.0);
+        assert_relative_eq!(j, 0.01, epsilon = 1e-10);
+    }
+
+    #[test]
+    fn test_1s_1s_analytical() {
+        let r: f64 = 2.0;
+        let zeta: f64 = 1.0;
+        let rho: f64 = r * zeta;
+        let term = 1.0 + 1.375 * rho + 0.75 * rho.powi(2) + (1.0 / 6.0) * rho.powi(3);
+        let expected = 1.0 / r - (-2.0 * rho).exp() / r * term;
+
+        let calc = sto_coulomb_integral(r, 1, zeta, 1, zeta);
+        assert_relative_eq!(calc, expected, epsilon = 1e-12);
+    }
+
+    #[test]
+    fn test_symmetry() {
+        let j1 = sto_coulomb_integral(2.5, 1, 1.2, 2, 0.8);
+        let j2 = sto_coulomb_integral(2.5, 2, 0.8, 1, 1.2);
+        assert_relative_eq!(j1, j2, epsilon = 1e-14);
+    }
+
+    #[test]
+    fn test_stability_near_zero() {
+        let j_limit = sto_coulomb_integral(1e-8, 2, 1.5, 2, 1.5);
+        let j_close = sto_coulomb_integral(1e-5, 2, 1.5, 2, 1.5);
+
+        assert_relative_eq!(j_limit, j_close, epsilon = 1e-5);
+    }
+}
