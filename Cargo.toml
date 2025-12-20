@@ -1,0 +1,34 @@
+[package]
+name = "sto-ns"
+version = "0.1.0"
+authors = ["Tony Kan <tianchengkan@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/TKanX/sto-ns"
+edition = "2024"
+description = "A lightweight, pure Rust, no-std kernel for exact ns Slater-type orbital Coulomb integrals, optimized for both semi-empirical and ab initio methods."
+keywords = [
+    "chemistry",
+    "quantum-chemistry",
+    "slater-orbitals",
+    "ab-initio",
+    "no-std",
+]
+categories = ["science", "simulation", "mathematics"]
+readme = "README.md"
+
+[dependencies]
+libm = { version = "0.2.15", optional = true }
+
+[lib]
+name = "sto_ns"
+path = "src/lib.rs"
+
+[features]
+default = ["std"]
+std = []
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
