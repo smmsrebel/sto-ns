@@ -295,15 +295,16 @@ fn fill_aux_a(arr: &mut [f64], max_k: usize, p: f64) {
     let mut val = exp_neg_p * inv_p;
     arr[0] = val;
 
-    for k in 1..=max_k {
+    for (i, slot) in arr[1..=max_k].iter_mut().enumerate() {
+        let k = i + 1;
         val = (k as f64 * val + exp_neg_p) * inv_p;
-        arr[k] = val;
+        *slot = val;
     }
 }
 
 fn fill_aux_b(arr: &mut [f64], max_k: usize, q: f64) {
     if abs(q) < TAYLOR_THRESHOLD {
-        for k in 0..=max_k {
+        for (k, slot) in arr[..=max_k].iter_mut().enumerate() {
             let mut sum = 0.0;
             let mut q_pow = 1.0;
             for i in 0..12 {
@@ -313,7 +314,7 @@ fn fill_aux_b(arr: &mut [f64], max_k: usize, q: f64) {
                 }
                 q_pow *= -q;
             }
-            arr[k] = sum;
+            *slot = sum;
         }
     } else {
         let exp_q = exp(q);
@@ -323,10 +324,11 @@ fn fill_aux_b(arr: &mut [f64], max_k: usize, q: f64) {
         let mut val = (exp_q - exp_neg_q) * inv_q;
         arr[0] = val;
 
-        for k in 1..=max_k {
+        for (i, slot) in arr[1..=max_k].iter_mut().enumerate() {
+            let k = i + 1;
             let sign_term = if k % 2 == 0 { exp_q } else { -exp_q };
             val = (k as f64 * val + sign_term - exp_neg_q) * inv_q;
-            arr[k] = val;
+            *slot = val;
         }
     }
 }
