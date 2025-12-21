@@ -33,11 +33,11 @@ Add this to your `Cargo.toml`:
 sto-ns = "0.1.0"
 ```
 
-To use in a `no_std` environment, disable default features:
+To use in a `no_std` environment, disable default features and enable `libm`:
 
 ```toml
 [dependencies]
-sto-ns = { version = "0.1.0", default-features = false }
+sto-ns = { version = "0.1.0", default-features = false, features = ["libm"] }
 ```
 
 ## Usage
